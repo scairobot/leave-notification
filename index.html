@@ -12,7 +12,6 @@
       --teal-light: #E1F5EE;
       --teal-mid: #9FE1CB;
       --teal-dark: #0F6E56;
-      --teal-deeper: #085041;
       --gray-bg: #F7F7F5;
       --gray-border: #E0DED8;
       --gray-text: #888780;
@@ -32,35 +31,12 @@
       padding: 2rem 1rem 4rem;
     }
 
-    .container {
-      max-width: 520px;
-      margin: 0 auto;
-    }
+    .container { max-width: 520px; margin: 0 auto; }
 
-    .header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .header .clinic-name {
-      font-size: 13px;
-      color: var(--gray-text);
-      letter-spacing: 0.05em;
-      margin-bottom: 0.4rem;
-    }
-
-    .header h1 {
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.01em;
-    }
-
-    .header .subtitle {
-      font-size: 13px;
-      color: var(--text-sub);
-      margin-top: 0.3rem;
-    }
+    .header { text-align: center; margin-bottom: 2rem; }
+    .header .clinic-name { font-size: 13px; color: var(--gray-text); letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+    .header h1 { font-size: 22px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+    .header .subtitle { font-size: 13px; color: var(--text-sub); margin-top: 0.3rem; }
 
     .card {
       background: var(--white);
@@ -79,12 +55,8 @@
       margin-bottom: 0.75rem;
     }
 
-    /* 治療師選擇 */
-    .therapist-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
+    /* 治療師 */
+    .therapist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
     .therapist-btn {
       padding: 10px 12px;
@@ -95,40 +67,42 @@
       text-align: left;
       transition: border-color 0.15s, background 0.15s;
     }
+    .therapist-btn:hover { border-color: var(--teal-mid); }
+    .therapist-btn.selected { border: 1.5px solid var(--teal); background: var(--teal-light); }
+    .therapist-btn .t-name { font-size: 15px; font-weight: 500; color: var(--text); display: block; }
+    .therapist-btn.selected .t-name { color: var(--teal-dark); }
+    .therapist-btn .t-role { font-size: 11px; color: var(--gray-text); display: block; margin-top: 2px; }
+    .therapist-btn.selected .t-role { color: var(--teal-dark); opacity: 0.75; }
 
-    .therapist-btn:hover {
-      border-color: var(--teal-mid);
+    /* 日期模式切換 */
+    .mode-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1rem;
     }
 
-    .therapist-btn.selected {
+    .mode-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--gray-border);
+      background: var(--white);
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text-sub);
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+      text-align: center;
+    }
+    .mode-btn:hover { border-color: var(--teal-mid); }
+    .mode-btn.active {
       border: 1.5px solid var(--teal);
       background: var(--teal-light);
-    }
-
-    .therapist-btn .t-name {
-      font-size: 15px;
+      color: var(--teal-dark);
       font-weight: 500;
-      color: var(--text);
-      display: block;
     }
 
-    .therapist-btn.selected .t-name {
-      color: var(--teal-dark);
-    }
-
-    .therapist-btn .t-role {
-      font-size: 11px;
-      color: var(--gray-text);
-      display: block;
-      margin-top: 2px;
-    }
-
-    .therapist-btn.selected .t-role {
-      color: var(--teal-dark);
-      opacity: 0.75;
-    }
-
-    /* 日期 */
+    /* 日期輸入 */
     .date-input {
       width: 100%;
       padding: 9px 12px;
@@ -141,9 +115,19 @@
       outline: none;
       transition: border-color 0.15s;
     }
+    .date-input:focus { border-color: var(--teal); }
 
-    .date-input:focus {
-      border-color: var(--teal);
+    .date-range-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+    }
+    .date-range-sep {
+      font-size: 13px;
+      color: var(--gray-text);
+      text-align: center;
+      white-space: nowrap;
     }
 
     /* 個案清單 */
@@ -153,7 +137,6 @@
       align-items: center;
       margin-bottom: 0.75rem;
     }
-
     .select-all-btn {
       font-size: 12px;
       color: var(--teal);
@@ -163,16 +146,9 @@
       padding: 0;
       font-family: inherit;
     }
+    .select-all-btn:hover { color: var(--teal-dark); }
 
-    .select-all-btn:hover {
-      color: var(--teal-dark);
-    }
-
-    .cases-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-    }
+    .cases-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 
     .case-item {
       display: flex;
@@ -186,53 +162,23 @@
       transition: border-color 0.15s, background 0.15s;
       user-select: none;
     }
-
-    .case-item:hover {
-      border-color: var(--teal-mid);
-    }
-
-    .case-item.checked {
-      border-color: var(--teal);
-      background: var(--teal-light);
-    }
+    .case-item:hover { border-color: var(--teal-mid); }
+    .case-item.checked { border-color: var(--teal); background: var(--teal-light); }
 
     .case-checkbox {
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
       border-radius: 4px;
       border: 1.5px solid var(--gray-border);
       flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       background: var(--white);
       transition: background 0.15s, border-color 0.15s;
     }
-
-    .case-item.checked .case-checkbox {
-      background: var(--teal);
-      border-color: var(--teal);
-    }
-
-    .check-svg {
-      display: none;
-      width: 10px;
-      height: 10px;
-    }
-
-    .case-item.checked .check-svg {
-      display: block;
-    }
-
-    .case-name {
-      font-size: 13px;
-      color: var(--text);
-    }
-
-    .case-item.checked .case-name {
-      color: var(--teal-dark);
-      font-weight: 500;
-    }
+    .case-item.checked .case-checkbox { background: var(--teal); border-color: var(--teal); }
+    .check-svg { display: none; width: 10px; height: 10px; }
+    .case-item.checked .check-svg { display: block; }
+    .case-name { font-size: 13px; color: var(--text); }
+    .case-item.checked .case-name { color: var(--teal-dark); font-weight: 500; }
 
     .count-badge {
       display: inline-block;
@@ -246,12 +192,7 @@
       vertical-align: middle;
     }
 
-    .placeholder-msg {
-      font-size: 13px;
-      color: var(--gray-text);
-      text-align: center;
-      padding: 1rem 0;
-    }
+    .placeholder-msg { font-size: 13px; color: var(--gray-text); text-align: center; padding: 1rem 0; }
 
     /* 訊息預覽 */
     .preview-box {
@@ -265,13 +206,7 @@
       white-space: pre-wrap;
       word-break: break-word;
     }
-
-    .preview-placeholder {
-      font-size: 13px;
-      color: var(--gray-text);
-      text-align: center;
-      padding: 1rem 0;
-    }
+    .preview-placeholder { font-size: 13px; color: var(--gray-text); text-align: center; padding: 1rem 0; }
 
     .preview-nav {
       display: flex;
@@ -279,52 +214,25 @@
       justify-content: space-between;
       margin-top: 0.75rem;
     }
-
     .preview-nav button {
-      font-size: 12px;
-      color: var(--teal);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      font-family: inherit;
+      font-size: 12px; color: var(--teal);
+      background: none; border: none; cursor: pointer; padding: 0; font-family: inherit;
     }
-
-    .preview-nav button:disabled {
-      color: var(--gray-text);
-      cursor: default;
-    }
-
-    .preview-counter {
-      font-size: 12px;
-      color: var(--gray-text);
-    }
+    .preview-nav button:disabled { color: var(--gray-text); cursor: default; }
+    .preview-counter { font-size: 12px; color: var(--gray-text); }
 
     /* 送出按鈕 */
     .send-btn {
-      width: 100%;
-      padding: 13px;
-      background: var(--teal);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 16px;
-      font-weight: 600;
-      font-family: inherit;
+      width: 100%; padding: 13px;
+      background: var(--teal); color: white;
+      border: none; border-radius: var(--radius);
+      font-size: 16px; font-weight: 600; font-family: inherit;
       cursor: pointer;
       transition: background 0.15s, opacity 0.15s;
       margin-top: 0.5rem;
-      letter-spacing: 0.01em;
     }
-
-    .send-btn:hover:not(:disabled) {
-      background: var(--teal-dark);
-    }
-
-    .send-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
+    .send-btn:hover:not(:disabled) { background: var(--teal-dark); }
+    .send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
     /* 狀態訊息 */
     .status-bar {
@@ -335,37 +243,14 @@
       margin-top: 0.75rem;
       line-height: 1.5;
     }
-
-    .status-bar.success {
-      background: var(--teal-light);
-      color: var(--teal-dark);
-      border: 1px solid var(--teal-mid);
-    }
-
-    .status-bar.error {
-      background: #FCEBEB;
-      color: #791F1F;
-      border: 1px solid #F7C1C1;
-    }
-
-    .status-bar.loading {
-      background: #F0F0EE;
-      color: var(--text-sub);
-      border: 1px solid var(--gray-border);
-    }
-
-    /* 分隔線 */
-    hr {
-      border: none;
-      border-top: 1px solid var(--gray-border);
-      margin: 0.25rem 0 1rem;
-    }
+    .status-bar.success { background: var(--teal-light); color: var(--teal-dark); border: 1px solid var(--teal-mid); }
+    .status-bar.error { background: #FCEBEB; color: #791F1F; border: 1px solid #F7C1C1; }
+    .status-bar.loading { background: #F0F0EE; color: var(--text-sub); border: 1px solid var(--gray-border); }
 
     @media (max-width: 400px) {
-      .therapist-grid,
-      .cases-grid {
-        grid-template-columns: 1fr;
-      }
+      .therapist-grid, .cases-grid { grid-template-columns: 1fr; }
+      .date-range-row { grid-template-columns: 1fr; }
+      .date-range-sep { display: none; }
     }
   </style>
 </head>
@@ -382,15 +267,32 @@
   <!-- 治療師 -->
   <div class="card">
     <p class="section-label">治療師</p>
-    <div class="therapist-grid" id="therapist-grid">
-      <!-- 由 JS 動態產生 -->
-    </div>
+    <div class="therapist-grid" id="therapist-grid"></div>
   </div>
 
   <!-- 請假日期 -->
   <div class="card">
     <p class="section-label">請假日期</p>
-    <input type="date" class="date-input" id="leave-date" />
+
+    <!-- 模式切換 -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-single" onclick="setMode('single')">單日請假</button>
+      <button class="mode-btn" id="mode-range" onclick="setMode('range')">連續請假</button>
+    </div>
+
+    <!-- 單日 -->
+    <div id="date-single">
+      <input type="date" class="date-input" id="leave-date" />
+    </div>
+
+    <!-- 連續 -->
+    <div id="date-range" style="display:none">
+      <div class="date-range-row">
+        <input type="date" class="date-input" id="leave-date-start" />
+        <span class="date-range-sep">至</span>
+        <input type="date" class="date-input" id="leave-date-end" />
+      </div>
+    </div>
   </div>
 
   <!-- 個案清單 -->
@@ -427,34 +329,59 @@
 </div>
 
 <script>
-  // ── 設定區（部署時請確認以下兩個值）──────────────────────────────
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtjHcn3P7f5l5IqZvBOXSZZl-0EhHivrRuBSNhqawL8OiyI-v-RSW2CKjybTJtvtw/exec";
+  // ── 設定區 ────────────────────────────────────────────────────────
+  const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL";
   // ────────────────────────────────────────────────────────────────
 
-  // 治療師資料（從 Apps Script 取得後動態填入，初始為空）
   let therapists = [];
-  // 個案資料 { "治療師名": ["個案名", ...] }
   let caseMap = {};
-
   let selectedTherapist = null;
   let selectedCases = new Set();
   let previewMessages = [];
   let previewIndex = 0;
+  let dateMode = "single"; // "single" | "range"
 
   // ── 初始化 ───────────────────────────────────────────────────────
   async function init() {
-    // 設定今天為預設日期
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    document.getElementById("leave-date").value = `${yyyy}-${mm}-${dd}`;
+    const today = todayStr();
+    document.getElementById("leave-date").value = today;
+    document.getElementById("leave-date-start").value = today;
+    document.getElementById("leave-date-end").value = today;
+
     document.getElementById("leave-date").addEventListener("change", updatePreview);
+    document.getElementById("leave-date-start").addEventListener("change", onStartDateChange);
+    document.getElementById("leave-date-end").addEventListener("change", updatePreview);
 
     await loadTherapistsAndCases();
   }
 
-  // ── 從 Apps Script 載入治療師與個案資料 ──────────────────────────
+  function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+
+  // ── 日期模式切換 ──────────────────────────────────────────────────
+  function setMode(mode) {
+    dateMode = mode;
+    document.getElementById("mode-single").classList.toggle("active", mode === "single");
+    document.getElementById("mode-range").classList.toggle("active", mode === "range");
+    document.getElementById("date-single").style.display = mode === "single" ? "block" : "none";
+    document.getElementById("date-range").style.display  = mode === "range"  ? "block" : "none";
+    updatePreview();
+  }
+
+  // 開始日期變更時，確保結束日期不早於開始日期
+  function onStartDateChange() {
+    const start = document.getElementById("leave-date-start").value;
+    const end   = document.getElementById("leave-date-end").value;
+    if (end < start) {
+      document.getElementById("leave-date-end").value = start;
+    }
+    document.getElementById("leave-date-end").min = start;
+    updatePreview();
+  }
+
+  // ── 載入治療師與個案資料 ──────────────────────────────────────────
   async function loadTherapistsAndCases() {
     try {
       const res = await fetch(`${APPS_SCRIPT_URL}?action=getCases`);
@@ -462,25 +389,19 @@
       therapists = data.therapists;
       caseMap = data.cases;
     } catch (e) {
-      // 若無法連線，使用預設資料（開發時用）
       therapists = [
         { name: "李彥霖", role: "職能治療師" },
         { name: "汪品妤", role: "職能治療師" },
         { name: "林妡穎", role: "語言治療師" },
       ];
-      caseMap = {
-        "李彥霖": [],
-        "汪品妤": [],
-        "林妡穎": [],
-      };
+      caseMap = { "李彥霖": [], "汪品妤": [], "林妡穎": [] };
     }
     renderTherapists();
   }
 
-  // ── 渲染治療師按鈕 ────────────────────────────────────────────────
+  // ── 渲染治療師 ────────────────────────────────────────────────────
   function renderTherapists() {
-    const grid = document.getElementById("therapist-grid");
-    grid.innerHTML = therapists.map(t => `
+    document.getElementById("therapist-grid").innerHTML = therapists.map(t => `
       <button class="therapist-btn" data-name="${t.name}" onclick="selectTherapist(this)">
         <span class="t-name">${t.name}</span>
         <span class="t-role">${t.role}</span>
@@ -488,7 +409,6 @@
     `).join("");
   }
 
-  // ── 選擇治療師 ────────────────────────────────────────────────────
   function selectTherapist(btn) {
     document.querySelectorAll(".therapist-btn").forEach(b => b.classList.remove("selected"));
     btn.classList.add("selected");
@@ -511,7 +431,6 @@
     }
 
     selectAllBtn.style.display = "block";
-
     area.innerHTML = `
       <div class="cases-grid">
         ${cases.map(c => `
@@ -530,39 +449,26 @@
     updateCountBadge();
   }
 
-  // ── 勾選個案 ──────────────────────────────────────────────────────
   function toggleCase(el) {
     const name = el.dataset.case;
-    if (selectedCases.has(name)) {
-      selectedCases.delete(name);
-      el.classList.remove("checked");
-    } else {
-      selectedCases.add(name);
-      el.classList.add("checked");
-    }
+    if (selectedCases.has(name)) { selectedCases.delete(name); el.classList.remove("checked"); }
+    else { selectedCases.add(name); el.classList.add("checked"); }
     updateCountBadge();
     updatePreview();
   }
 
-  // ── 全選／取消全選 ────────────────────────────────────────────────
   function toggleAll() {
     const items = document.querySelectorAll(".case-item");
     const allChecked = [...items].every(i => i.classList.contains("checked"));
     items.forEach(i => {
       const name = i.dataset.case;
-      if (allChecked) {
-        selectedCases.delete(name);
-        i.classList.remove("checked");
-      } else {
-        selectedCases.add(name);
-        i.classList.add("checked");
-      }
+      if (allChecked) { selectedCases.delete(name); i.classList.remove("checked"); }
+      else { selectedCases.add(name); i.classList.add("checked"); }
     });
     updateCountBadge();
     updatePreview();
   }
 
-  // ── 更新計數 ──────────────────────────────────────────────────────
   function updateCountBadge() {
     const badge = document.getElementById("count-badge");
     if (selectedCases.size > 0) {
@@ -573,25 +479,48 @@
     }
   }
 
+  // ── 取得日期字串（供訊息使用）────────────────────────────────────
+  function getDateLabel() {
+    if (dateMode === "single") {
+      const val = document.getElementById("leave-date").value;
+      if (!val) return null;
+      return { label: formatDate(val), start: val, end: val };
+    } else {
+      const start = document.getElementById("leave-date-start").value;
+      const end   = document.getElementById("leave-date-end").value;
+      if (!start || !end) return null;
+      if (end < start) return null;
+      const label = start === end ? formatDate(start) : `${formatDate(start)} 至 ${formatDate(end)}`;
+      return { label, start, end };
+    }
+  }
+
+  function formatDate(val) {
+    const d = new Date(val + "T00:00:00");
+    return `${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日`;
+  }
+
   // ── 更新訊息預覽 ──────────────────────────────────────────────────
   function updatePreview() {
-    const dateVal = document.getElementById("leave-date").value;
     const previewArea = document.getElementById("preview-area");
     const sendBtn = document.getElementById("send-btn");
+    const dateInfo = getDateLabel();
 
-    if (!selectedTherapist || !dateVal || selectedCases.size === 0) {
+    if (!selectedTherapist || !dateInfo || selectedCases.size === 0) {
       previewArea.innerHTML = `<p class="preview-placeholder">請完成上方選項後查看預覽</p>`;
       sendBtn.disabled = true;
       previewMessages = [];
       return;
     }
 
-    const d = new Date(dateVal + "T00:00:00");
-    const dateStr = `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`;
-
-    previewMessages = [...selectedCases].map(caseName =>
-      `您好，\n\n${selectedTherapist}治療師因故請假，\n${caseName} 於 ${dateStr} 的療程將暫停一次。\n\n造成不便敬請見諒，如有疑問請與診所聯繫。\n\n— 實康復健科診所`
-    );
+    // 單日與連續的訊息文字略有不同
+    const isSingleDay = dateInfo.start === dateInfo.end;
+    previewMessages = [...selectedCases].map(caseName => {
+      const datePart = isSingleDay
+        ? `於 ${dateInfo.label} 的療程將暫停一次`
+        : `於 ${dateInfo.label} 期間的療程將暫停`;
+      return `您好，\n\n${selectedTherapist}治療師因故請假，\n${caseName} ${datePart}。\n\n造成不便敬請見諒，如有疑問請與診所聯繫。\n\n— 實康復健科診所`;
+    });
 
     previewIndex = 0;
     renderPreview();
@@ -605,9 +534,9 @@
     const total = previewMessages.length;
     const navHtml = total > 1 ? `
       <div class="preview-nav">
-        <button onclick="changePreview(-1)" id="prev-btn" ${previewIndex === 0 ? "disabled" : ""}>← 上一則</button>
+        <button onclick="changePreview(-1)" ${previewIndex === 0 ? "disabled" : ""}>← 上一則</button>
         <span class="preview-counter">${previewIndex + 1} / ${total}</span>
-        <button onclick="changePreview(1)" id="next-btn" ${previewIndex === total - 1 ? "disabled" : ""}>下一則 →</button>
+        <button onclick="changePreview(1)" ${previewIndex === total - 1 ? "disabled" : ""}>下一則 →</button>
       </div>
     ` : "";
 
@@ -618,21 +547,22 @@
   }
 
   function changePreview(dir) {
-    const total = previewMessages.length;
-    previewIndex = Math.max(0, Math.min(total - 1, previewIndex + dir));
+    previewIndex = Math.max(0, Math.min(previewMessages.length - 1, previewIndex + dir));
     renderPreview();
   }
 
   // ── 送出通知 ──────────────────────────────────────────────────────
   async function handleSend() {
-    const dateVal = document.getElementById("leave-date").value;
     const sendBtn = document.getElementById("send-btn");
-    const statusBar = document.getElementById("status-bar");
+    const dateInfo = getDateLabel();
 
     const payload = {
       action: "sendLeaveNotice",
       therapist: selectedTherapist,
-      date: dateVal,
+      dateStart: dateInfo.start,
+      dateEnd: dateInfo.end,
+      dateLabel: dateInfo.label,
+      isSingleDay: dateInfo.start === dateInfo.end,
       cases: [...selectedCases],
     };
 
@@ -668,12 +598,9 @@
     bar.className = `status-bar ${type}`;
     bar.textContent = msg;
     bar.style.display = "block";
-    if (type === "success") {
-      setTimeout(() => { bar.style.display = "none"; }, 5000);
-    }
+    if (type === "success") setTimeout(() => { bar.style.display = "none"; }, 5000);
   }
 
-  // ── 啟動 ──────────────────────────────────────────────────────────
   init();
 </script>
 
