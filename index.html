@@ -264,6 +264,15 @@
     <p class="subtitle">選擇個案後，系統將自動傳送 LINE 通知給家長</p>
   </div>
 
+  <!-- 通知類型 -->
+  <div class="card">
+    <p class="section-label">通知類型</p>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="type-leave" onclick="setNotifyType('leave')">治療師請假</button>
+      <button class="mode-btn" id="type-clinic" onclick="setNotifyType('clinic')">診所休假</button>
+    </div>
+  </div>
+
   <!-- 治療師 -->
   <div class="card">
     <p class="section-label">治療師</p>
@@ -330,7 +339,7 @@
 
 <script>
   // ── 設定區 ────────────────────────────────────────────────────────
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtjHcn3P7f5l5IqZvBOXSZZl-0EhHivrRuBSNhqawL8OiyI-v-RSW2CKjybTJtvtw/exec";
+  const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL";
   // ────────────────────────────────────────────────────────────────
 
   let therapists = [];
@@ -340,6 +349,7 @@
   let previewMessages = [];
   let previewIndex = 0;
   let dateMode = "single"; // "single" | "range"
+  let notifyType = "leave"; // "leave" | "clinic"
 
   // ── 初始化 ───────────────────────────────────────────────────────
   async function init() {
@@ -358,6 +368,14 @@
   function todayStr() {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+
+  // ── 通知類型切換 ──────────────────────────────────────────────────
+  function setNotifyType(type) {
+    notifyType = type;
+    document.getElementById("type-leave").classList.toggle("active", type === "leave");
+    document.getElementById("type-clinic").classList.toggle("active", type === "clinic");
+    updatePreview();
   }
 
   // ── 日期模式切換 ──────────────────────────────────────────────────
@@ -516,10 +534,19 @@
     // 單日與連續的訊息文字略有不同
     const isSingleDay = dateInfo.start === dateInfo.end;
     previewMessages = [...selectedCases].map(caseName => {
-      const datePart = isSingleDay
-        ? `於 ${dateInfo.label} 的療程將暫停一次`
-        : `於 ${dateInfo.label} 期間的療程將暫停`;
-      return `您好，\n\n${selectedTherapist}治療師因故請假，\n${caseName} ${datePart}。\n\n造成不便敬請見諒，如有疑問請與診所聯繫。\n\n— 實康復健科診所`;
+      if (notifyType === "clinic") {
+        // 診所休假
+        const datePart = isSingleDay
+          ? `診所於 ${dateInfo.label} 休假`
+          : `診所於 ${dateInfo.label} 期間休假`;
+        return `您好，\n\n${datePart}，\n${caseName} 的療程將暫停一次。\n\n造成不便敬請見諒，如有疑問請與診所聯繫。\n\n— 實康復健科診所`;
+      } else {
+        // 治療師請假
+        const datePart = isSingleDay
+          ? `於 ${dateInfo.label} 的療程將暫停一次`
+          : `於 ${dateInfo.label} 期間的療程將暫停`;
+        return `您好，\n\n${selectedTherapist}治療師因故請假，\n${caseName} ${datePart}。\n\n造成不便敬請見諒，如有疑問請與診所聯繫。\n\n— 實康復健科診所`;
+      }
     });
 
     previewIndex = 0;
@@ -558,6 +585,7 @@
 
     const payload = {
       action: "sendLeaveNotice",
+      notifyType,
       therapist: selectedTherapist,
       dateStart: dateInfo.start,
       dateEnd: dateInfo.end,
