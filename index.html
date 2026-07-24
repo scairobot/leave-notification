@@ -6,66 +6,44 @@
   <title>請假通知系統 — 實康復健科診所</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --teal: #1D9E75;
-      --teal-light: #E1F5EE;
-      --teal-mid: #9FE1CB;
-      --teal-dark: #0F6E56;
-      --gray-bg: #F7F7F5;
-      --gray-border: #E0DED8;
-      --gray-text: #888780;
-      --text: #2C2C2A;
-      --text-sub: #5F5E5A;
-      --white: #FFFFFF;
-      --radius: 10px;
-      --radius-sm: 6px;
+      --teal: #1D9E75; --teal-light: #E1F5EE; --teal-mid: #9FE1CB;
+      --teal-dark: #0F6E56; --gray-bg: #F7F7F5; --gray-border: #E0DED8;
+      --gray-text: #888780; --text: #2C2C2A; --text-sub: #5F5E5A;
+      --white: #FFFFFF; --radius: 10px; --radius-sm: 6px;
     }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
         "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
-      background: var(--gray-bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 2rem 1rem 4rem;
+      background: var(--gray-bg); color: var(--text);
+      min-height: 100vh; padding: 2rem 1rem 4rem;
     }
-
     .container { max-width: 520px; margin: 0 auto; }
-
     .header { text-align: center; margin-bottom: 2rem; }
     .header .clinic-name { font-size: 13px; color: var(--gray-text); letter-spacing: 0.05em; margin-bottom: 0.4rem; }
-    .header h1 { font-size: 22px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+    .header h1 { font-size: 22px; font-weight: 600; color: var(--text); }
     .header .subtitle { font-size: 13px; color: var(--text-sub); margin-top: 0.3rem; }
+    .card { background: var(--white); border: 1px solid var(--gray-border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-text); margin-bottom: 0.75rem; }
 
-    .card {
-      background: var(--white);
-      border: 1px solid var(--gray-border);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1rem;
+    /* 切換按鈕組 */
+    .toggle-group { display: flex; gap: 8px; }
+    .toggle-group.three { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+    .toggle-btn {
+      flex: 1; padding: 8px 12px; border-radius: var(--radius-sm);
+      border: 1px solid var(--gray-border); background: var(--white);
+      cursor: pointer; font-size: 13px; font-family: inherit;
+      color: var(--text-sub); transition: all 0.15s; text-align: center;
     }
-
-    .section-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--gray-text);
-      margin-bottom: 0.75rem;
-    }
+    .toggle-btn:hover { border-color: var(--teal-mid); }
+    .toggle-btn.active { border: 1.5px solid var(--teal); background: var(--teal-light); color: var(--teal-dark); font-weight: 500; }
 
     /* 治療師 */
     .therapist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
     .therapist-btn {
-      padding: 10px 12px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--gray-border);
-      background: var(--white);
-      cursor: pointer;
-      text-align: left;
-      transition: border-color 0.15s, background 0.15s;
+      padding: 10px 12px; border-radius: var(--radius-sm);
+      border: 1px solid var(--gray-border); background: var(--white);
+      cursor: pointer; text-align: left; transition: all 0.15s;
     }
     .therapist-btn:hover { border-color: var(--teal-mid); }
     .therapist-btn.selected { border: 1.5px solid var(--teal); background: var(--teal-light); }
@@ -74,190 +52,89 @@
     .therapist-btn .t-role { font-size: 11px; color: var(--gray-text); display: block; margin-top: 2px; }
     .therapist-btn.selected .t-role { color: var(--teal-dark); opacity: 0.75; }
 
-    /* 日期模式切換 */
-    .mode-toggle {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 1rem;
-    }
+    /* 請假原因（治療師請假子選項） */
+    .sub-option { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--gray-border); }
 
-    .mode-btn {
-      flex: 1;
-      padding: 8px 12px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--gray-border);
-      background: var(--white);
-      cursor: pointer;
-      font-size: 13px;
-      font-family: inherit;
-      color: var(--text-sub);
-      transition: border-color 0.15s, background 0.15s, color 0.15s;
-      text-align: center;
+    /* 日曆 */
+    .calendar-wrap { user-select: none; }
+    .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .cal-nav { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-sub); padding: 4px 8px; border-radius: var(--radius-sm); }
+    .cal-nav:hover { background: var(--gray-bg); }
+    .cal-month { font-size: 15px; font-weight: 600; color: var(--text); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+    .cal-weekday { text-align: center; font-size: 11px; color: var(--gray-text); padding: 4px 0; font-weight: 500; }
+    .cal-day {
+      text-align: center; padding: 7px 2px; border-radius: var(--radius-sm);
+      font-size: 13px; cursor: pointer; color: var(--text);
+      transition: background 0.1s;
     }
-    .mode-btn:hover { border-color: var(--teal-mid); }
-    .mode-btn.active {
-      border: 1.5px solid var(--teal);
-      background: var(--teal-light);
-      color: var(--teal-dark);
-      font-weight: 500;
-    }
+    .cal-day:hover:not(.empty):not(.past) { background: var(--gray-bg); }
+    .cal-day.empty { cursor: default; }
+    .cal-day.past { color: var(--gray-border); cursor: default; }
+    .cal-day.today { font-weight: 700; color: var(--teal-dark); }
+    .cal-day.selected { background: var(--teal) !important; color: white !important; font-weight: 600; border-radius: var(--radius-sm); }
 
-    /* 日期輸入 */
-    .date-input {
-      width: 100%;
-      padding: 9px 12px;
-      border: 1px solid var(--gray-border);
-      border-radius: var(--radius-sm);
-      font-size: 15px;
-      font-family: inherit;
-      color: var(--text);
-      background: var(--white);
-      outline: none;
-      transition: border-color 0.15s;
+    /* 選取日期標籤列 */
+    .selected-dates { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.75rem; min-height: 28px; }
+    .date-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--teal-light); color: var(--teal-dark);
+      border: 1px solid var(--teal-mid); border-radius: 99px;
+      font-size: 12px; padding: 3px 10px;
     }
-    .date-input:focus { border-color: var(--teal); }
-
-    .date-range-row {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 8px;
-    }
-    .date-range-sep {
-      font-size: 13px;
-      color: var(--gray-text);
-      text-align: center;
-      white-space: nowrap;
-    }
+    .date-tag .remove { cursor: pointer; font-size: 14px; line-height: 1; color: var(--teal-dark); opacity: 0.6; }
+    .date-tag .remove:hover { opacity: 1; }
+    .dates-placeholder { font-size: 13px; color: var(--gray-text); padding: 4px 0; }
 
     /* 個案清單 */
-    .cases-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-    .select-all-btn {
-      font-size: 12px;
-      color: var(--teal);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      font-family: inherit;
-    }
+    .cases-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .select-all-btn { font-size: 12px; color: var(--teal); background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; }
     .select-all-btn:hover { color: var(--teal-dark); }
-
     .cases-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-
     .case-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--gray-border);
-      background: var(--white);
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      user-select: none;
+      display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+      border-radius: var(--radius-sm); border: 1px solid var(--gray-border);
+      background: var(--white); cursor: pointer; transition: all 0.15s; user-select: none;
     }
     .case-item:hover { border-color: var(--teal-mid); }
     .case-item.checked { border-color: var(--teal); background: var(--teal-light); }
-
     .case-checkbox {
-      width: 16px; height: 16px;
-      border-radius: 4px;
-      border: 1.5px solid var(--gray-border);
-      flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--white);
-      transition: background 0.15s, border-color 0.15s;
+      width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--gray-border);
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      background: var(--white); transition: all 0.15s;
     }
     .case-item.checked .case-checkbox { background: var(--teal); border-color: var(--teal); }
     .check-svg { display: none; width: 10px; height: 10px; }
     .case-item.checked .check-svg { display: block; }
     .case-name { font-size: 13px; color: var(--text); }
     .case-item.checked .case-name { color: var(--teal-dark); font-weight: 500; }
-
-    .count-badge {
-      display: inline-block;
-      font-size: 11px;
-      background: var(--teal-light);
-      color: var(--teal-dark);
-      padding: 2px 8px;
-      border-radius: 99px;
-      margin-left: 8px;
-      font-weight: 500;
-      vertical-align: middle;
-    }
-
+    .count-badge { display: inline-block; font-size: 11px; background: var(--teal-light); color: var(--teal-dark); padding: 2px 8px; border-radius: 99px; margin-left: 8px; font-weight: 500; vertical-align: middle; }
     .placeholder-msg { font-size: 13px; color: var(--gray-text); text-align: center; padding: 1rem 0; }
 
-    /* 訊息預覽 */
-    .preview-box {
-      background: var(--gray-bg);
-      border: 1px solid var(--gray-border);
-      border-radius: var(--radius-sm);
-      padding: 1rem 1.25rem;
-      font-size: 13px;
-      line-height: 1.8;
-      color: var(--text);
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
+    /* 預覽 */
+    .preview-box { background: var(--gray-bg); border: 1px solid var(--gray-border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; font-size: 13px; line-height: 1.8; color: var(--text); white-space: pre-wrap; word-break: break-word; }
     .preview-placeholder { font-size: 13px; color: var(--gray-text); text-align: center; padding: 1rem 0; }
-
-    .preview-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 0.75rem;
-    }
-    .preview-nav button {
-      font-size: 12px; color: var(--teal);
-      background: none; border: none; cursor: pointer; padding: 0; font-family: inherit;
-    }
+    .preview-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 0.75rem; }
+    .preview-nav button { font-size: 12px; color: var(--teal); background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; }
     .preview-nav button:disabled { color: var(--gray-text); cursor: default; }
     .preview-counter { font-size: 12px; color: var(--gray-text); }
 
-    /* 送出按鈕 */
-    .send-btn {
-      width: 100%; padding: 13px;
-      background: var(--teal); color: white;
-      border: none; border-radius: var(--radius);
-      font-size: 16px; font-weight: 600; font-family: inherit;
-      cursor: pointer;
-      transition: background 0.15s, opacity 0.15s;
-      margin-top: 0.5rem;
-    }
+    /* 送出 */
+    .send-btn { width: 100%; padding: 13px; background: var(--teal); color: white; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.15s; margin-top: 0.5rem; }
     .send-btn:hover:not(:disabled) { background: var(--teal-dark); }
     .send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-
-    /* 狀態訊息 */
-    .status-bar {
-      display: none;
-      padding: 10px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      margin-top: 0.75rem;
-      line-height: 1.5;
-    }
+    .status-bar { display: none; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; margin-top: 0.75rem; line-height: 1.5; }
     .status-bar.success { background: var(--teal-light); color: var(--teal-dark); border: 1px solid var(--teal-mid); }
     .status-bar.error { background: #FCEBEB; color: #791F1F; border: 1px solid #F7C1C1; }
     .status-bar.loading { background: #F0F0EE; color: var(--text-sub); border: 1px solid var(--gray-border); }
 
     @media (max-width: 400px) {
       .therapist-grid, .cases-grid { grid-template-columns: 1fr; }
-      .date-range-row { grid-template-columns: 1fr; }
-      .date-range-sep { display: none; }
     }
   </style>
 </head>
 <body>
-
 <div class="container">
-
   <div class="header">
     <p class="clinic-name">實康復健科診所</p>
     <h1>請假通知系統</h1>
@@ -267,9 +144,17 @@
   <!-- 通知類型 -->
   <div class="card">
     <p class="section-label">通知類型</p>
-    <div class="mode-toggle">
-      <button class="mode-btn active" id="type-leave" onclick="setNotifyType('leave')">治療師請假</button>
-      <button class="mode-btn" id="type-clinic" onclick="setNotifyType('clinic')">診所休假</button>
+    <div class="toggle-group">
+      <button class="toggle-btn active" id="type-leave" onclick="setNotifyType('leave')">治療師請假</button>
+      <button class="toggle-btn" id="type-clinic" onclick="setNotifyType('clinic')">診所休假</button>
+    </div>
+    <!-- 治療師請假子選項：請假 / 休假 -->
+    <div class="sub-option" id="leave-reason-wrap">
+      <p class="section-label" style="margin-bottom:0.5rem">請假原因</p>
+      <div class="toggle-group three">
+        <button class="toggle-btn active" id="reason-leave" onclick="setLeaveReason('leave')">請假</button>
+        <button class="toggle-btn" id="reason-vacation" onclick="setLeaveReason('vacation')">休假</button>
+      </div>
     </div>
   </div>
 
@@ -279,28 +164,19 @@
     <div class="therapist-grid" id="therapist-grid"></div>
   </div>
 
-  <!-- 請假日期 -->
+  <!-- 日期（日曆多選） -->
   <div class="card">
     <p class="section-label">請假日期</p>
-
-    <!-- 模式切換 -->
-    <div class="mode-toggle">
-      <button class="mode-btn active" id="mode-single" onclick="setMode('single')">單日請假</button>
-      <button class="mode-btn" id="mode-range" onclick="setMode('range')">連續請假</button>
-    </div>
-
-    <!-- 單日 -->
-    <div id="date-single">
-      <input type="date" class="date-input" id="leave-date" />
-    </div>
-
-    <!-- 連續 -->
-    <div id="date-range" style="display:none">
-      <div class="date-range-row">
-        <input type="date" class="date-input" id="leave-date-start" />
-        <span class="date-range-sep">至</span>
-        <input type="date" class="date-input" id="leave-date-end" />
+    <div class="calendar-wrap">
+      <div class="cal-header">
+        <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+        <span class="cal-month" id="cal-month-label"></span>
+        <button class="cal-nav" onclick="changeMonth(1)">›</button>
       </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div class="selected-dates" id="selected-dates">
+      <span class="dates-placeholder">點選日期以新增</span>
     </div>
   </div>
 
@@ -311,36 +187,23 @@
         通知個案
         <span class="count-badge" id="count-badge" style="display:none"></span>
       </p>
-      <button class="select-all-btn" id="select-all-btn" onclick="toggleAll()" style="display:none">
-        全選／取消全選
-      </button>
+      <button class="select-all-btn" id="select-all-btn" onclick="toggleAll()" style="display:none">全選／取消全選</button>
     </div>
-    <div id="cases-area">
-      <p class="placeholder-msg">請先選擇治療師</p>
-    </div>
+    <div id="cases-area"><p class="placeholder-msg">請先選擇治療師</p></div>
   </div>
 
   <!-- 訊息預覽 -->
   <div class="card">
     <p class="section-label">訊息預覽</p>
-    <div id="preview-area">
-      <p class="preview-placeholder">請完成上方選項後查看預覽</p>
-    </div>
+    <div id="preview-area"><p class="preview-placeholder">請完成上方選項後查看預覽</p></div>
   </div>
 
-  <!-- 送出 -->
-  <button class="send-btn" id="send-btn" disabled onclick="handleSend()">
-    傳送通知
-  </button>
-
+  <button class="send-btn" id="send-btn" disabled onclick="handleSend()">傳送通知</button>
   <div class="status-bar" id="status-bar"></div>
-
 </div>
 
 <script>
-  // ── 設定區 ────────────────────────────────────────────────────────
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtjHcn3P7f5l5IqZvBOXSZZl-0EhHivrRuBSNhqawL8OiyI-v-RSW2CKjybTJtvtw/exec";
-  // ────────────────────────────────────────────────────────────────
+  const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL";
 
   let therapists = [];
   let caseMap = {};
@@ -348,58 +211,129 @@
   let selectedCases = new Set();
   let previewMessages = [];
   let previewIndex = 0;
-  let dateMode = "single"; // "single" | "range"
-  let notifyType = "leave"; // "leave" | "clinic"
+  let notifyType = "leave";   // "leave" | "clinic"
+  let leaveReason = "leave";  // "leave" | "vacation"
+  let selectedDates = [];     // ["2026-07-01", "2026-07-03", ...]
+
+  // 日曆狀態
+  const today = new Date();
+  let calYear = today.getFullYear();
+  let calMonth = today.getMonth(); // 0-indexed
 
   // ── 初始化 ───────────────────────────────────────────────────────
   async function init() {
-    const today = todayStr();
-    document.getElementById("leave-date").value = today;
-    document.getElementById("leave-date-start").value = today;
-    document.getElementById("leave-date-end").value = today;
-
-    document.getElementById("leave-date").addEventListener("change", updatePreview);
-    document.getElementById("leave-date-start").addEventListener("change", onStartDateChange);
-    document.getElementById("leave-date-end").addEventListener("change", updatePreview);
-
+    renderCalendar();
     await loadTherapistsAndCases();
   }
 
-  function todayStr() {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-  }
-
-  // ── 通知類型切換 ──────────────────────────────────────────────────
+  // ── 通知類型 ──────────────────────────────────────────────────────
   function setNotifyType(type) {
     notifyType = type;
     document.getElementById("type-leave").classList.toggle("active", type === "leave");
     document.getElementById("type-clinic").classList.toggle("active", type === "clinic");
+    document.getElementById("leave-reason-wrap").style.display = type === "leave" ? "block" : "none";
     updatePreview();
   }
 
-  // ── 日期模式切換 ──────────────────────────────────────────────────
-  function setMode(mode) {
-    dateMode = mode;
-    document.getElementById("mode-single").classList.toggle("active", mode === "single");
-    document.getElementById("mode-range").classList.toggle("active", mode === "range");
-    document.getElementById("date-single").style.display = mode === "single" ? "block" : "none";
-    document.getElementById("date-range").style.display  = mode === "range"  ? "block" : "none";
+  function setLeaveReason(reason) {
+    leaveReason = reason;
+    document.getElementById("reason-leave").classList.toggle("active", reason === "leave");
+    document.getElementById("reason-vacation").classList.toggle("active", reason === "vacation");
     updatePreview();
   }
 
-  // 開始日期變更時，確保結束日期不早於開始日期
-  function onStartDateChange() {
-    const start = document.getElementById("leave-date-start").value;
-    const end   = document.getElementById("leave-date-end").value;
-    if (end < start) {
-      document.getElementById("leave-date-end").value = start;
+  // ── 日曆 ──────────────────────────────────────────────────────────
+  function renderCalendar() {
+    const label = document.getElementById("cal-month-label");
+    const grid = document.getElementById("cal-grid");
+    label.textContent = `${calYear} 年 ${calMonth + 1} 月`;
+
+    const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+    let html = weekdays.map(d => `<div class="cal-weekday">${d}</div>`).join("");
+
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+    const todayStr = toDateStr(today);
+
+    for (let i = 0; i < firstDay; i++) html += `<div class="cal-day empty"></div>`;
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${calYear}-${String(calMonth + 1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+      const isPast = dateStr < todayStr;
+      const isToday = dateStr === todayStr;
+      const isSelected = selectedDates.includes(dateStr);
+      let cls = "cal-day";
+      if (isPast) cls += " past";
+      else if (isSelected) cls += " selected";
+      else if (isToday) cls += " today";
+      html += `<div class="${cls}" data-date="${dateStr}" onclick="toggleDate('${dateStr}', ${isPast})">${d}</div>`;
     }
-    document.getElementById("leave-date-end").min = start;
+
+    grid.innerHTML = html;
+  }
+
+  function changeMonth(dir) {
+    calMonth += dir;
+    if (calMonth < 0) { calMonth = 11; calYear--; }
+    if (calMonth > 11) { calMonth = 0; calYear++; }
+    renderCalendar();
+  }
+
+  function toggleDate(dateStr, isPast) {
+    if (isPast) return;
+    const idx = selectedDates.indexOf(dateStr);
+    if (idx === -1) selectedDates.push(dateStr);
+    else selectedDates.splice(idx, 1);
+    selectedDates.sort();
+    renderCalendar();
+    renderDateTags();
     updatePreview();
   }
 
-  // ── 載入治療師與個案資料 ──────────────────────────────────────────
+  function removeDate(dateStr) {
+    selectedDates = selectedDates.filter(d => d !== dateStr);
+    renderCalendar();
+    renderDateTags();
+    updatePreview();
+  }
+
+  function renderDateTags() {
+    const wrap = document.getElementById("selected-dates");
+    if (selectedDates.length === 0) {
+      wrap.innerHTML = `<span class="dates-placeholder">點選日期以新增</span>`;
+      return;
+    }
+    wrap.innerHTML = selectedDates.map(d => {
+      const label = formatDateShort(d);
+      return `<span class="date-tag">${label}<span class="remove" onclick="removeDate('${d}')">×</span></span>`;
+    }).join("");
+  }
+
+  // ── 日期工具 ──────────────────────────────────────────────────────
+  function toDateStr(d) {
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+
+  function formatDateShort(val) {
+    const d = new Date(val + "T00:00:00");
+    return `${d.getMonth()+1}/${d.getDate()}`;
+  }
+
+  function formatDateFull(val) {
+    const d = new Date(val + "T00:00:00");
+    return `${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日`;
+  }
+
+  function buildDateLabel(dates) {
+    if (dates.length === 0) return "";
+    if (dates.length === 1) return formatDateFull(dates[0]);
+    return dates.map(d => {
+      const dt = new Date(d + "T00:00:00");
+      return `${dt.getMonth()+1} 月 ${dt.getDate()} 日`;
+    }).join("、");
+  }
+
+  // ── 載入治療師與個案 ──────────────────────────────────────────────
   async function loadTherapistsAndCases() {
     try {
       const res = await fetch(`${APPS_SCRIPT_URL}?action=getCases`);
@@ -417,7 +351,6 @@
     renderTherapists();
   }
 
-  // ── 渲染治療師 ────────────────────────────────────────────────────
   function renderTherapists() {
     document.getElementById("therapist-grid").innerHTML = therapists.map(t => `
       <button class="therapist-btn" data-name="${t.name}" onclick="selectTherapist(this)">
@@ -436,7 +369,7 @@
     updatePreview();
   }
 
-  // ── 渲染個案清單 ──────────────────────────────────────────────────
+  // ── 個案清單 ──────────────────────────────────────────────────────
   function renderCases() {
     const area = document.getElementById("cases-area");
     const selectAllBtn = document.getElementById("select-all-btn");
@@ -449,21 +382,15 @@
     }
 
     selectAllBtn.style.display = "block";
-    area.innerHTML = `
-      <div class="cases-grid">
-        ${cases.map(c => `
-          <div class="case-item" data-case="${c}" onclick="toggleCase(this)">
-            <div class="case-checkbox">
-              <svg class="check-svg" viewBox="0 0 10 10" fill="none">
-                <polyline points="1.5,5 4,7.5 8.5,2.5" stroke="white" stroke-width="1.8"
-                  stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <span class="case-name">${c}</span>
-          </div>
-        `).join("")}
-      </div>
-    `;
+    area.innerHTML = `<div class="cases-grid">${cases.map(c => `
+      <div class="case-item" data-case="${c}" onclick="toggleCase(this)">
+        <div class="case-checkbox">
+          <svg class="check-svg" viewBox="0 0 10 10" fill="none">
+            <polyline points="1.5,5 4,7.5 8.5,2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="case-name">${c}</span>
+      </div>`).join("")}</div>`;
     updateCountBadge();
   }
 
@@ -489,88 +416,49 @@
 
   function updateCountBadge() {
     const badge = document.getElementById("count-badge");
-    if (selectedCases.size > 0) {
-      badge.textContent = `已選 ${selectedCases.size} 位`;
-      badge.style.display = "inline-block";
-    } else {
-      badge.style.display = "none";
-    }
+    if (selectedCases.size > 0) { badge.textContent = `已選 ${selectedCases.size} 位`; badge.style.display = "inline-block"; }
+    else badge.style.display = "none";
   }
 
-  // ── 取得日期字串（供訊息使用）────────────────────────────────────
-  function getDateLabel() {
-    if (dateMode === "single") {
-      const val = document.getElementById("leave-date").value;
-      if (!val) return null;
-      return { label: formatDate(val), start: val, end: val };
-    } else {
-      const start = document.getElementById("leave-date-start").value;
-      const end   = document.getElementById("leave-date-end").value;
-      if (!start || !end) return null;
-      if (end < start) return null;
-      const label = start === end ? formatDate(start) : `${formatDate(start)} 至 ${formatDate(end)}`;
-      return { label, start, end };
-    }
-  }
-
-  function formatDate(val) {
-    const d = new Date(val + "T00:00:00");
-    return `${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日`;
-  }
-
-  // ── 更新訊息預覽 ──────────────────────────────────────────────────
+  // ── 訊息預覽 ──────────────────────────────────────────────────────
   function updatePreview() {
     const previewArea = document.getElementById("preview-area");
     const sendBtn = document.getElementById("send-btn");
-    const dateInfo = getDateLabel();
 
-    if (!selectedTherapist || !dateInfo || selectedCases.size === 0) {
+    if (!selectedTherapist || selectedDates.length === 0 || selectedCases.size === 0) {
       previewArea.innerHTML = `<p class="preview-placeholder">請完成上方選項後查看預覽</p>`;
       sendBtn.disabled = true;
       previewMessages = [];
       return;
     }
 
-    // 單日與連續的訊息文字略有不同
-    const isSingleDay = dateInfo.start === dateInfo.end;
-    previewMessages = [...selectedCases].map(caseName => {
-      if (notifyType === "clinic") {
-        // 診所休假
-        const datePart = isSingleDay
-          ? `診所於 ${dateInfo.label} 休假`
-          : `診所於 ${dateInfo.label} 期間休假`;
-        return `您好，\n\n${datePart}，\n${caseName} 的療程將暫停一次。\n\n造成不便敬請見諒，如有疑問請與診所聯繫。\n\n— 實康復健科診所`;
-      } else {
-        // 治療師請假
-        const datePart = isSingleDay
-          ? `於 ${dateInfo.label} 的療程將暫停一次`
-          : `於 ${dateInfo.label} 期間的療程將暫停`;
-        return `您好，\n\n${selectedTherapist}治療師因故請假，\n${caseName} ${datePart}。\n\n造成不便敬請見諒，如有疑問請與診所聯繫。\n\n— 實康復健科診所`;
-      }
-    });
+    const dateLabel = buildDateLabel(selectedDates);
 
+    previewMessages = [...selectedCases].map(caseName => buildMessage(caseName, dateLabel));
     previewIndex = 0;
     renderPreview();
     sendBtn.disabled = false;
   }
 
+  function buildMessage(caseName, dateLabel) {
+    if (notifyType === "clinic") {
+      return `您好，\n\n診所於 ${dateLabel} 休假，\n${caseName} 的療程將暫停。\n\n造成不便敬請見諒，如有疑問請與診所聯繫。\n\n— 實康復健科診所`;
+    }
+    const reasonText = leaveReason === "vacation" ? "休假" : "請假";
+    return `您好，\n\n${selectedTherapist}治療師${reasonText}，\n${caseName} 於 ${dateLabel} 的療程將暫停。\n\n造成不便敬請見諒，如有疑問請與診所聯繫。\n\n— 實康復健科診所`;
+  }
+
   function renderPreview() {
     const previewArea = document.getElementById("preview-area");
-    if (previewMessages.length === 0) return;
-
+    if (!previewMessages.length) return;
     const total = previewMessages.length;
     const navHtml = total > 1 ? `
       <div class="preview-nav">
         <button onclick="changePreview(-1)" ${previewIndex === 0 ? "disabled" : ""}>← 上一則</button>
         <span class="preview-counter">${previewIndex + 1} / ${total}</span>
-        <button onclick="changePreview(1)" ${previewIndex === total - 1 ? "disabled" : ""}>下一則 →</button>
-      </div>
-    ` : "";
-
-    previewArea.innerHTML = `
-      <div class="preview-box">${previewMessages[previewIndex]}</div>
-      ${navHtml}
-    `;
+        <button onclick="changePreview(1)" ${previewIndex === total-1 ? "disabled" : ""}>下一則 →</button>
+      </div>` : "";
+    previewArea.innerHTML = `<div class="preview-box">${previewMessages[previewIndex]}</div>${navHtml}`;
   }
 
   function changePreview(dir) {
@@ -578,19 +466,18 @@
     renderPreview();
   }
 
-  // ── 送出通知 ──────────────────────────────────────────────────────
+  // ── 送出 ──────────────────────────────────────────────────────────
   async function handleSend() {
     const sendBtn = document.getElementById("send-btn");
-    const dateInfo = getDateLabel();
+    const dateLabel = buildDateLabel(selectedDates);
 
     const payload = {
       action: "sendLeaveNotice",
       notifyType,
+      leaveReason,
       therapist: selectedTherapist,
-      dateStart: dateInfo.start,
-      dateEnd: dateInfo.end,
-      dateLabel: dateInfo.label,
-      isSingleDay: dateInfo.start === dateInfo.end,
+      dates: selectedDates,
+      dateLabel,
       cases: [...selectedCases],
     };
 
@@ -631,6 +518,5 @@
 
   init();
 </script>
-
 </body>
 </html>
